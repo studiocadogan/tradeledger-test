@@ -1,4 +1,5 @@
-import axios from 'axios'
+import axios from 'axios';
+import jsonpAdapter from 'axios-jsonp';
 
 function getCorrectUrl(type) {
     switch (type) {
@@ -16,6 +17,7 @@ function getCorrectUrl(type) {
 export function getBusinessData(type, params) {
     const httpData = {
         method: 'get',
+        adapter: jsonpAdapter,
         params: {
             ...params,
             guid: 'b6242120-5bce-4b10-9839-d3045a7682da'

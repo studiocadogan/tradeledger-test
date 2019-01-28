@@ -23,11 +23,7 @@ class LookUpContainer extends Component {
         e.preventDefault()
         getBusinessData(this.state.type, {
             [this.state.type]: form[this.state.type]
-        }).then(res =>
-            this.handleResponse(
-                JSON.parse(res.data.replace('callback(', '').replace(')', ''))
-            )
-        )
+        }).then(res => this.handleResponse(res.data))
     }
 
     handleResponse(data) {
@@ -58,14 +54,17 @@ class LookUpContainer extends Component {
                     return abnForm
                 case 'acn':
                     return acnForm
-                default: 
+                default:
                     return null
             }
         }
 
         return (
             <Form
-                model={{...getFormByType(this.state.type), submitLabel: 'Search'}}
+                model={{
+                    ...getFormByType(this.state.type),
+                    submitLabel: 'Search'
+                }}
                 onSubmit={this.onFormSubmit}
             />
         )
@@ -77,7 +76,9 @@ class LookUpContainer extends Component {
         return (
             <select value={this.state.type} onChange={onSelection}>
                 {this.state.possibleTypes.map(type => (
-                    <option key={type.key} value={type.key}>{type.title}</option>
+                    <option key={type.key} value={type.key}>
+                        {type.title}
+                    </option>
                 ))}
             </select>
         )
