@@ -1,68 +1,44 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+# TradeLedger Test Component
+This component looks up australian businesses by ABN, ACN or Company name, and presents a list of them which can then be browsed through.
 
-In the project directory, you can run:
+## To Run
+npm/yarn start will fire up the development server, while npm/yarn test will launch tests. This was built using the create-react-app boilerplate and so all commands are identical.
 
-### `npm start`
+## Libraries used
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Axios
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+React
 
-### `npm test`
+## Components
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Form
+A generic form component which renders inputs based upon types and stores it in an internal state managed via keys in each object. Originally the logic for handling this was managed by the LookUpContainer component, but I realised that it becomes much more reusable if it's self-contained and the only props required are an onSubmit function and a model prop, as opposed to the parent state, and the onChange functions.
 
-### `npm run build`
+### LookUpContainer
+Parent container for the whole component, handles the majority of the logic (get calls, handling search types etc). I tried to avoid having to write an onACNLookup, onNameLookup etc using this.state.type and key references so that one function could handle and return all the parameters needed for the get call.
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### BusinessDetails
+Stateless presentational component for rendering selectedBusiness from the BusinessDetails component, used Object.keys to display everything as the different objects that were returned from ABN/ACN calls made it difficult to pinpoint what data was actually relevant.
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+### BusinessList
+Renders the list of companies passed by LookUpContainer after the get call. Sets the selectedBusiness state on click which then renders BusinessDetails. 
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+## Considerations/Thoughts
+Ideally, I would have moved the BusinessList logic up to LookUpContainer and made it stateless, but it did feel a little more comfortable being able to set the selectedBusiness state without having to pass down more props although that approach makes more structural sense
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+I tried to keep all variable names accurate for the sake of consistency. I could have potentially enforced this by using stricter parameter namings (i.e. instead of func(var1, var2) I could have used func({var1, var2})) but it seemed to be excessive in an environment maintained by a single developer.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+The SCSS is a little over-componentalised for a demo but for the sake of demonstrating my approach to SCSS, my file structure is always feature/_component.scss with an index file tying it all together (unless using a package that allows for wildcard imports which node-sass didn't seem to). The index file can then be imported by App.scss and makes it a little easier to load/unload entire components if they're no longer needed.
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+I chose to keep all my padding/colors in an object because it gave me a single source of truth. If I needed to change the primary color or input padding I could do this universally without having to update each element. I could have achieved this with standalone variables but I feel like tying it to a function made it syntactically a little easier to understand (ex. element x uses the lightest primary color so i can just use color(primary, light) as opposed to having 3 variables for colorPrimaryLight, colorPrimaryDark etc).
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Having an API key in the app was a big security risk and ideally this would have been tied to a .env file on a server-rendered app or stored within graphQL but since I didn't implement either of these I took the risk for the sake of the demo.
 
-## Learn More
+Used some object destructuring where this.props/state were called a lot for the sake of cleaner code, but I'm unsure of how severe the performance detriment caused by having a destructured object is, and where it would be most necessary.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+I have put a basic test in place, but have not gone too in-depth as I don't have extensive knowledge of jest and so modified the test that comes prepackaged with CRA, but would be eager to learn more.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+The businessDetails are handled a bit poorly. I could have kept ABN/ACN values as an object instead of wrapping them in an array but this was done before I realised that the object structure is different for these types of get calls and so the keys are different from a name call.

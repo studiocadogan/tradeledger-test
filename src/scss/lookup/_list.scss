@@ -1,0 +1,7 @@
+.business-list {
+    @include flex-center(column);
+
+    button {
+        width: 100%;
+    }
+}

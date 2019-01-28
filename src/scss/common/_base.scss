@@ -1,0 +1,29 @@
+button,
+input[type='submit'] {
+    background: color(button, default);
+
+    &:active:hover {
+        background: color(button, clicked);
+        color: color(button, text-clicked);
+        transform: scale(0.99);
+    }
+
+    &:focus {
+        outline: none;
+    }
+}
+input,
+select,
+button {
+    width: 100%;
+    padding: padding(input);
+    margin: padding(external);
+
+    &[type='submit'] {
+        background: color(button, submit);
+    }
+}
+
+h1, h2{
+    text-align: center;
+}

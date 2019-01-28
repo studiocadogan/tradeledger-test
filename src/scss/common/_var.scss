@@ -1,0 +1,31 @@
+@function color($color, $tone: "base") {
+    @return map-get(map-get($colors, $color), $tone);
+}
+
+@function padding($type) {
+    @return map-get($padding, $type)
+}
+
+$padding: (
+    input: 8px,
+    container: 20px,
+    p: 10px 8px,
+    external: 8px 0
+);
+
+$colors: (
+    primary: (
+        bg: #fff,
+        container: #f5f5f5
+    ),
+    input: (
+        inner: #fff,
+        border: #d2d2d2
+    ),
+    button: (
+        default: #f5f5f5,
+        clicked: #5f9ffe,
+        text-clicked: #fff,
+        submit: #9dc3fc
+    )
+);
